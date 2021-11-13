@@ -46,7 +46,7 @@ def locate_article(context, base_account, tl):
         if context.has_used(tweet.id):
             continue
         prompt = " ".join(first) + ".\n"
-        if "\n" in prompt:
+        if "\n" in prompt[:-1]:
             continue
         if prompt.startswith("RT @"):
             continue
