@@ -69,12 +69,16 @@ def locate_article(context, base_account, tl):
             print("used")
             continue
         prompt = " ".join(first) + ".\n"
+        print(repr(prompt))
         if "\n" in prompt[:-1]:
+            print("newline")
             continue
         if prompt.startswith("RT @"):
+            print("RT")
             continue
         output = sample(prompt)
         url = f"https://twitter.com/{base_account[1:]}/status/{tweet.id}"
         if output is not None:
+            print("output is not none")
             return output, tweet.id, url
     return None, None, None
