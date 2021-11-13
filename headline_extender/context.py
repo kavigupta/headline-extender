@@ -70,5 +70,6 @@ class Context:
             api.update_status(status=item["link"], in_reply_to_status_id=result.id)
 
             item["new_tweet"] = result.id
+            self.dump()
 
         return False
