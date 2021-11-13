@@ -10,7 +10,7 @@ ROOT_DIRECTORY = os.path.dirname(os.path.dirname(__file__))
 
 def render_text(software_tool, base_account, output):
     output = output.replace("\u200b", "")
-    output = dumb_to_smart_quotes(output)
+    output = tex_escape(output)
     header, *rest = output.split("\n")
     assert header.endswith(".")
     header = header[:-1]
@@ -49,7 +49,7 @@ def dumb_to_smart_quotes(string):
     """Takes a string and returns it with dumb quotes, single and double,
     replaced by smart quotes. Accounts for the possibility of HTML tags
     within the string.
-    
+
     Based on https://gist.github.com/davidtheclark/5521432
     """
 
@@ -60,3 +60,32 @@ def dumb_to_smart_quotes(string):
     # left double quotes.
     string = string.replace('"', "``")
     return string
+
+
+def tex_escape(text):
+    """
+    Based on https://stackoverflow.com/a/25875504/1549476
+        :param text: a plain text message
+        :return: the message escaped to appear correctly in LaTeX
+    """
+    conv = {
+        "&": r"\&",
+        "%": r"\%",
+        "$": r"\$",
+        "#": r"\#",
+        "_": r"\_",
+        "{": r"\{",
+        "}": r"\}",
+        "~": r"\textasciitilde{}",
+        "^": r"\^{}",
+        "\\": r"\textbackslash{}",
+        "<": r"\textless{}",
+        ">": r"\textgreater{}",
+    }
+    regex = re.compile(
+        "|".join(
+            re.escape(str(key))
+            for key in sorted(conv.keys(), key=lambda item: -len(item))
+        )
+    )
+    return dumb_to_smart_quotes(regex.sub(lambda match: conv[match.group()], text))

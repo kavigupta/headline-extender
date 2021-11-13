@@ -24,7 +24,7 @@ def check_output(output):
     return "\n\n".join(lines)
 
 
-@permacache("headline_extender/sample_article/sample")
+@permacache("headline_extender/sample_article/sample_2")
 def sample(prompt, tries=5):
     for _ in range(tries):
         r = requests.post(
@@ -36,14 +36,16 @@ def sample(prompt, tries=5):
         )
         output = r.json()["output"]
         output = check_output(output)
-        if output is not None:
+        if output:
             return output
 
 
 def locate_article(context, base_account, tl):
-    for tweet in tl:
+    for tweet in tl[::-1]:
         *first, _ = tweet.text.split(" ")
-        prompt = " ".join(first)
+        if context.has_used(tweet.id):
+            continue
+        prompt = " ".join(first) + "."
         output = sample(prompt)
         url = f"https://twitter.com/{base_account}/status/{tweet.id}"
         if output is not None:

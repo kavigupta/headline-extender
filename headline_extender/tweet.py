@@ -1,7 +1,7 @@
-
 import tweepy
 
 from .secret import consumer_key, consumer_secret, key, secret
+
 
 def get_api():
     auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
