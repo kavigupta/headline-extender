@@ -1,0 +1,4 @@
+*.pyc
+*.ipynb_checkpoints
+Untitled.ipynb
+headline_extender/secret.py

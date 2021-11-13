@@ -1,0 +1,41 @@
+\documentclass[varwidth=15cm, margin=1cm]{standalone}
+
+\usepackage{multicol}
+\usepackage{xcolor}
+\usepackage{ragged2e}
+\usepackage[utf8]{inputenc}
+
+\definecolor{background}{HTML}{FFF1E5}
+\definecolor{specialcolor}{HTML}{AD1E31}
+
+
+\newcommand*\sepline{%
+  \begin{center}
+    \rule[1ex]{\textwidth}{.5pt}
+  \end{center}}
+
+% fonts from https://tex.stackexchange.com/questions/25249/how-do-i-use-a-particular-font-for-a-small-section-of-text-in-my-document
+\newcommand*{\fontfortitle}{\fontfamily{ppl}\selectfont} % Palatino
+\newcommand*{\fontfortext}{\fontfamily{bch}\selectfont} 
+
+\begin{document}
+
+    {\Huge \fontfortitle \textbf{TITLE}}\\
+
+    {\color{specialcolor} \fontfortext By \textbf{SOFTWARETOOL}}
+    
+    {\color{specialcolor} \fontfortext Based on headline from \emph{BASEACCOUNT}}
+    \sepline
+    {\Large
+    \fontfortext
+    TEXT
+    
+    }
+    \sepline
+    \begin{FlushRight}
+        \fontfortext
+        \color{specialcolor}
+        \emph{@bot\_guesses} by \emph{@notkavi}
+    \end{FlushRight}
+        
+\end{document}
