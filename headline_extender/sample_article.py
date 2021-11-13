@@ -4,6 +4,20 @@ from permacache import permacache
 
 from .secret import deepai_api_key
 
+# try to keep the stories light. Obviously not perfect but at least an attempt
+BAN_LIST = [
+    "murder",
+    "kill",
+    "ra" + "pe",
+    "torture",
+    "assault",
+    "genocide",
+    "atrocit",
+    "homocide",
+    "gun",
+    "gang",
+]
+
 
 def check_output(output):
     lines = [x for x in output.split("\n") if x]
@@ -21,10 +35,17 @@ def check_output(output):
         return False
     if sum(":" in line for line in lines) > len(lines) / 2:
         return False
-    return "\n\n".join(lines)
+    if any(word in output for word in BAN_LIST):
+        return False
+    text = "\n\n".join(lines)
+    words = set(text.split())
+    all_uppercase = [x for x in words if x.isupper() and len(x) > 4]
+    if all_uppercase:
+        return False
+    return text
 
 
-@permacache("headline_extender/sample_article/sample_2")
+@permacache("headline_extender/sample_article/sample_5")
 def sample(prompt, tries=5):
     for _ in range(tries):
         r = requests.post(

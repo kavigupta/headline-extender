@@ -15,7 +15,11 @@ class Context:
         self.result = result
 
     def new_index(self):
-        return max([x["index"] for x in self.result] + [0]) + 1
+        id = get_api().user_timeline("@bot_guesses")[0].id
+        matching = [x for x in self.result if x["new_tweet"] == id]
+        if matching:
+            return matching[0]["index"] + 1
+        return 1
 
     def dump(self):
         with open(context_file, "w") as f:
@@ -32,29 +36,36 @@ class Context:
         tl = api.user_timeline(base_account)
         text, tweet_id, link = locate_article(self, base_account, tl)
         if text is None:
-            return True
+            return None
         image = render_text("DeepAI's GPT2 text generation model", base_account, text)
         path = f"outputs/{index}.png"
         image.save(path)
-        result = api.update_with_media(path, status=text.split("\n")[0])
-        api.update_status(status=link, in_reply_to_status_id=result.id)
-        self.use_tweet(
-            original_tweet=tweet_id,
-            new_tweet=result.id,
-            index=index,
-            image_path=path,
-            text=text,
-        )
-        return False
-
-    def use_tweet(self, original_tweet, new_tweet, index, image_path, text):
         self.result.append(
             dict(
-                original_tweet=original_tweet,
-                new_tweet=new_tweet,
+                original_tweet=tweet_id,
+                new_tweet=None,
                 index=index,
-                image_path=image_path,
+                image_path=path,
+                link=link,
                 text=text,
             )
         )
         self.dump()
+        return self.make_for_index(index, base_account)
+
+    def run_for_index(self, index, base_account, tweet):
+        item = self.make_for_index(index, base_account)
+
+        if item is None:
+            return True
+
+        if tweet:
+            api = get_api()
+            result = api.update_with_media(
+                item["path"], status=item["text"].split("\n")[0]
+            )
+            api.update_status(status=item["link"], in_reply_to_status_id=result.id)
+
+            item["new_tweet"] = result.id
+
+        return False
