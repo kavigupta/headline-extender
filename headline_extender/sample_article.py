@@ -63,8 +63,10 @@ def sample(prompt, tries=5):
 
 def locate_article(context, base_account, tl):
     for tweet in tl[::-1]:
+        print(tweet.text)
         *first, _ = tweet.text.split(" ")
         if context.has_used(tweet.id):
+            print("used")
             continue
         prompt = " ".join(first) + ".\n"
         if "\n" in prompt[:-1]:
