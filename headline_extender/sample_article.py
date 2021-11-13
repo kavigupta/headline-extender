@@ -45,9 +45,13 @@ def locate_article(context, base_account, tl):
         *first, _ = tweet.text.split(" ")
         if context.has_used(tweet.id):
             continue
-        prompt = " ".join(first) + "."
+        prompt = " ".join(first) + ".\n"
+        if "\n" in prompt:
+            continue
+        if prompt.startswith("RT @"):
+            continue
         output = sample(prompt)
-        url = f"https://twitter.com/{base_account}/status/{tweet.id}"
+        url = f"https://twitter.com/{base_account[1:]}/status/{tweet.id}"
         if output is not None:
-            return output, url
-    return None, None
+            return output, tweet.id, url
+    return None, None, None
