@@ -62,7 +62,7 @@ class Context:
         if tweet:
             api = get_api()
             result = api.update_with_media(
-                item["path"], status=item["text"].split("\n")[0]
+                item["image_path"], status=item["text"].split("\n")[0]
             )
             api.update_status(status=item["link"], in_reply_to_status_id=result.id)
 
