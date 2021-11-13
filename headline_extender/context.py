@@ -16,7 +16,7 @@ class Context:
 
     def new_index(self):
         for tweet in get_api().user_timeline("@bot_guesses"):
-            if not tweet.startswith("https:"):
+            if not tweet.text.startswith("https:"):
                 id = tweet.id
                 break
         matching = [x for x in self.result if x["new_tweet"] == id]
