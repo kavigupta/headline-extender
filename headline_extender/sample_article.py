@@ -60,7 +60,6 @@ def sample(prompt, tries=5):
         if output:
             return output
 
-
 def locate_article(context, base_account, tl):
     for tweet in tl[::-1]:
         print(tweet.text)
